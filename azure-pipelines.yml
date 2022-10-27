@@ -39,10 +39,20 @@ stages:
         Contents: '**/target/*.?(war|jar)'
         TargetFolder: $(Build.ArtifactStagingDirectory)
 
-    - task: PublishPipelineArtifact@0
-      displayName: 'Publish pipeline artifacts'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact'
+
+    - task: Maven@4
       inputs:
-        targetPath: $(Build.ArtifactStagingDirectory)
+        mavenPomFile: 'pom.xml'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        javaHomeOption: 'JDKVersion'
+        mavenVersionOption: 'Default'
+        mavenAuthenticateFeed: false
+        effectivePomSkip: false
+        sonarQubeRunAnalysis: false
+        #targetPath: $(Build.ArtifactStagingDirectory)
 
 - stage: Deploy
   displayName: Deploy stage
